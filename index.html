@@ -336,10 +336,21 @@ body{
 }
 
 .preview{
-    margin-top:15px;
-    width:100%;
-    border-radius:18px;
     display:none;
+    width:140px;
+    height:140px;
+    margin:20px auto 0;
+    border-radius:16px;
+    border:2px solid rgba(255,255,255,.15);
+    object-fit:contain;
+padding:3px;
+    background:rgba(255,255,255,.05);
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+    transition:.3s;
+}
+
+.preview:hover{
+    transform:scale(1.05);
 }
 
 /* CHAT PAGE */
@@ -477,6 +488,687 @@ body{
 }
 
 }
+
+.upload-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    width:100%;
+    padding:16px;
+    border-radius:18px;
+    cursor:pointer;
+    font-weight:700;
+    font-size:16px;
+    color:#fff;
+    background:linear-gradient(135deg,#7c5cff,#00e5ff);
+    border:none;
+    transition:.3s;
+    box-shadow:0 8px 20px rgba(0,229,255,.25);
+}
+
+.upload-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 30px rgba(0,229,255,.35);
+}
+
+.upload-btn:active{
+    transform:scale(.98);
+}
+
+.file-name{
+    margin-top:12px;
+    text-align:center;
+    color:var(--muted);
+    font-size:14px;
+}
+
+.select-input{
+    width:100%;
+    padding:15px 18px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.07);
+    color:#fff;
+    font-size:15px;
+    outline:none;
+    cursor:pointer;
+    transition:.3s;
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5L8 12l6.5-6.5z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 18px center;
+    background-size:16px;
+}
+
+.select-input:hover{
+    border-color:rgba(0,229,255,.5);
+}
+
+.select-input:focus{
+    border-color:var(--secondary);
+    box-shadow:0 0 18px rgba(0,229,255,.25);
+}
+
+.select-input option{
+    background:#10172e;
+    color:#fff;
+    padding:10px;
+}
+
+/* PREMIUM SUBSCRIBE BUTTON */
+
+.subscribe-btn{
+    position:relative;
+    width:100%;
+    padding:18px;
+    margin-top:20px;
+    border:none;
+    border-radius:18px;
+    cursor:pointer;
+    overflow:hidden;
+
+    font-size:18px;
+    font-weight:700;
+    letter-spacing:.5px;
+
+    color:#fff;
+
+    background:linear-gradient(
+        135deg,
+        #00c853,
+        #2e7d32
+    );
+
+    box-shadow:
+        0 0 20px rgba(0,255,100,.4),
+        0 0 50px rgba(255,215,0,.25);
+
+    transition:.35s ease;
+}
+
+/* rotating border */
+
+.subscribe-btn::before{
+
+    content:"";
+
+    position:absolute;
+    inset:-3px;
+
+    border-radius:20px;
+
+    background:conic-gradient(
+
+        #00ff66,
+        #00ffff,
+        gold,
+        #ff00ff,
+        #00ff66,
+        #00ffff,
+        gold,
+        #ff0000,
+        #00ff66
+
+    );
+
+    animation:rotateBorder 2.5s linear infinite;
+
+    z-index:-2;
+
+}
+
+/* button surface */
+
+.subscribe-btn::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:3px;
+
+    border-radius:16px;
+
+    background:linear-gradient(
+        135deg,
+        #00b140,
+        #006d2c
+    );
+
+    z-index:-1;
+
+}
+
+/* moving shine */
+
+.subscribe-btn span{
+
+    position:relative;
+    z-index:2;
+
+}
+
+.subscribe-btn::selection{
+    background:none;
+}
+
+/* light sweep */
+
+.subscribe-btn .shine{
+
+    position:absolute;
+
+    top:-60%;
+
+    left:-50%;
+
+    width:40%;
+
+    height:220%;
+
+    background:rgba(255,255,255,.35);
+
+    transform:rotate(25deg);
+
+    filter:blur(5px);
+
+    animation:shineMove 2.8s infinite;
+
+}
+
+/* hover */
+
+.subscribe-btn:hover{
+
+    transform:translateY(-3px) scale(1.03);
+
+    box-shadow:
+
+        0 0 25px #00ff99,
+
+        0 0 45px gold,
+
+        0 0 70px cyan;
+
+}
+
+/* click */
+
+.subscribe-btn:active{
+
+    transform:scale(.96);
+
+}
+
+/* glowing pulse */
+
+.subscribe-btn{
+
+    animation:
+
+        pulseGlow 1.8s infinite alternate,
+
+        colorShift 8s linear infinite;
+
+}
+
+/* rotating border */
+
+@keyframes rotateBorder{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* pulse */
+
+@keyframes pulseGlow{
+
+    from{
+
+        box-shadow:
+
+        0 0 20px lime,
+
+        0 0 35px gold;
+
+    }
+
+    to{
+
+        box-shadow:
+
+        0 0 35px cyan,
+
+        0 0 65px #00ff99,
+
+        0 0 90px gold;
+
+    }
+
+}
+
+/* shine */
+
+@keyframes shineMove{
+
+    0%{
+
+        left:-60%;
+
+    }
+
+    100%{
+
+        left:140%;
+
+    }
+
+}
+
+/* changing colors */
+
+@keyframes colorShift{
+
+    0%{
+
+        filter:hue-rotate(0deg);
+
+    }
+
+    100%{
+
+        filter:hue-rotate(360deg);
+
+    }
+
+}
+
+/* PREMIUM REDIRECT BUTTON */
+
+.redirect-btn{
+    position:relative;
+    width:100%;
+    margin-top:20px;
+    padding:16px;
+    border:none;
+    border-radius:18px;
+    cursor:pointer;
+    overflow:hidden;
+
+    font-size:17px;
+    font-weight:700;
+    letter-spacing:1px;
+    color:#fff;
+
+    background:linear-gradient(
+        135deg,
+        #FFD700,
+        #C9A227,
+        #00C853
+    );
+
+    background-size:300% 300%;
+
+    animation:
+        redirectGradient 6s ease infinite,
+        redirectPulse 2s infinite alternate;
+
+    transition:.3s ease;
+}
+
+/* Rotating glowing border */
+
+.redirect-btn::before{
+
+    content:"";
+
+    position:absolute;
+    inset:-3px;
+
+    border-radius:20px;
+
+    background:conic-gradient(
+        gold,
+        #fff176,
+        #00ff88,
+        gold,
+        #00ff88,
+        #FFD700,
+        gold
+    );
+
+    animation:redirectRotate 3s linear infinite;
+
+    z-index:-2;
+}
+
+/* Button face */
+
+.redirect-btn::after{
+
+    content:"";
+
+    position:absolute;
+    inset:3px;
+
+    border-radius:16px;
+
+    background:linear-gradient(
+        135deg,
+        #b8860b,
+        #0f8b4c
+    );
+
+    z-index:-1;
+}
+
+/* Shine sweep */
+
+.redirect-btn .shine{
+
+    position:absolute;
+    top:-60%;
+    left:-60%;
+    width:40%;
+    height:220%;
+
+    background:rgba(255,255,255,.45);
+
+    transform:rotate(25deg);
+
+    filter:blur(5px);
+
+    animation:redirectShine 2.5s infinite;
+}
+
+/* Hover */
+
+.redirect-btn:hover{
+
+    transform:translateY(-3px) scale(1.03);
+
+    box-shadow:
+        0 0 20px gold,
+        0 0 40px #FFD700,
+        0 0 60px #00ff88,
+        0 0 80px rgba(255,215,0,.6);
+}
+
+/* Click */
+
+.redirect-btn:active{
+
+    transform:scale(.97);
+
+}
+
+/* Animated gradient */
+
+@keyframes redirectGradient{
+
+    0%{
+        background-position:0% 50%;
+    }
+
+    50%{
+        background-position:100% 50%;
+    }
+
+    100%{
+        background-position:0% 50%;
+    }
+
+}
+
+/* Pulse */
+
+@keyframes redirectPulse{
+
+    from{
+
+        box-shadow:
+            0 0 15px gold,
+            0 0 30px #00ff88;
+
+    }
+
+    to{
+
+        box-shadow:
+            0 0 35px gold,
+            0 0 55px #00ff88,
+            0 0 75px #FFD700;
+
+    }
+
+}
+
+/* Rotating border */
+
+@keyframes redirectRotate{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+/* Shine */
+
+@keyframes redirectShine{
+
+    0%{
+        left:-60%;
+    }
+
+    100%{
+        left:150%;
+    }
+
+}
+
+/* ============================
+      PREMIUM REVIEWS
+============================ */
+
+.reviews-section{
+
+    width:100%;
+
+    margin-top:45px;
+
+    overflow:hidden;
+
+}
+
+.reviews-title{
+
+    text-align:center;
+
+    color:#fff;
+
+    font-size:22px;
+
+    font-weight:700;
+
+    margin-bottom:22px;
+
+}
+
+.reviews-marquee{
+
+    overflow:hidden;
+
+    width:100%;
+
+}
+
+.reviews-track{
+
+    display:flex;
+
+    gap:22px;
+
+    width:max-content;
+
+    animation:marquee 55s linear infinite;
+
+}
+
+.reviews-track:hover{
+
+    animation-play-state:paused;
+
+}
+
+.review-card{
+
+    width:240px;
+
+    min-height:145px;
+
+    flex-shrink:0;
+
+    padding:18px;
+
+    border-radius:22px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+
+    0 10px 35px rgba(0,0,0,.25);
+
+    transition:.35s;
+
+}
+
+.review-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.review-header{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.avatar{
+
+    width:46px;
+
+    height:46px;
+
+    border-radius:50%;
+
+    background:linear-gradient(135deg,#FFD700,#00C853);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:bold;
+
+    color:#fff;
+
+    font-size:18px;
+
+}
+
+.review-name{
+
+    color:white;
+
+    font-weight:bold;
+
+}
+
+.review-country{
+
+    color:#00d084;
+
+    font-size:13px;
+
+}
+
+.review-stars{
+
+    color:#FFD700;
+
+    margin:12px 0;
+
+    letter-spacing:2px;
+
+}
+
+.review-text{
+
+    color:#ddd;
+
+    font-size:13px;
+
+    line-height:1.5;
+
+}
+
+.review-badge{
+
+    margin-top:14px;
+
+    color:#00ff99;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+}
+
+@keyframes marquee{
+
+from{
+
+transform:translateX(0);
+
+}
+
+to{
+
+transform:translateX(-50%);
+
+}
+
+}
 </style>
 </head>
 <body>
@@ -559,7 +1251,28 @@ body{
 Create Account
 </button>
 
+
 </div>
+
+</div>
+</div>
+
+
+</section>
+
+<section class="reviews-section">
+
+    <div class="reviews-title">
+
+        ⭐ Trusted by Premium Members
+
+    </div>
+
+    <div class="reviews-marquee">
+
+        <div class="reviews-track" id="reviewsTrack"></div>
+
+    </div>
 
 </section>
 
@@ -588,10 +1301,7 @@ Create Account
 <input class="input" type="number" id="age" placeholder="Age (18+ only)">
 </div>    
 
-<div class="input-group">
-<label>Hobbies</label>
-<input class="input" id="hobbies" placeholder="Hobbies">
-</div>
+
 
 <div class="input-group">
 <label>About</label>
@@ -600,14 +1310,26 @@ Create Account
 
 <div class="input-group">
 <label>Relationship Goal</label>
-<select id="relationship">
+<select id="relationship" class="select-input">
 
-<option value="">Relationship goal</option>
-<option>Friendship</option>
-<option>Dating</option>
-<option>Serious relationship</option>
-<option>Networking</option>
-<option>Other</option>
+    <option value="">Choose your relationship goal</option>
+
+    <optgroup label="💕 Relationships">
+        <option>Dating</option>
+        <option>Serious Relationship</option>
+        <option>Marriage</option>
+    </optgroup>
+
+    <optgroup label="🤝 Social">
+        <option>Friendship</option>
+        <option>Networking</option>
+        <option>Travel Partner</option>
+    </optgroup>
+
+    <optgroup label="🌍 Other">
+        <option>Language Exchange</option>
+        <option>Other</option>
+    </optgroup>
 
 </select>
 </div>
@@ -638,7 +1360,7 @@ Submit Profile
 <p>Activate your premium membership to access VibeChat chats.</p>
 </div>
 
-<div class="price">$10 USD</div>
+<div class="price">$5 USD</div>
 
 <ul class="benefits">
 <li>✓ Unlimited messaging</li>
@@ -651,29 +1373,41 @@ Submit Profile
 </ul>
 
 <div class="wallet-box">
-<strong>USDT TRC20 Address</strong>
-<div id="walletAddress" style="margin-top:10px;">
-TEgaKW5vp7CNb8sAb5c15VaodTSkBQqYsA
-</div>
 
-<button class="copy-btn" id="copyAddressBtn">
-Copy Address
+    <strong>Premium Subscription</strong>
+
+    <p style="margin-top:10px;color:var(--muted);">
+        Click the button below to complete your $5 Premium subscription securely through PayPal.
+    </p>
+
+   <button class="subscribe-btn" id="subscribeBtn">
+    ⭐ Make Subscription
 </button>
+
 </div>
 
 <div class="input-group">
-<label>Upload Payment Proof</label>
-<input
-type="file"
-id="proofUpload"
-class="input"
-accept="image/png,image/jpeg,image/jpg">
+    <label>Upload Payment Proof</label>
+
+    <input
+        type="file"
+        id="proofUpload"
+        accept="image/png,image/jpeg,image/jpg"
+        hidden>
+
+    <label for="proofUpload" class="upload-btn">
+        📷 Choose Payment Screenshot
+    </label>
+
+    <div id="fileName" class="file-name">
+       
+    </div>
 </div>
 
 <img id="proofPreview" class="preview">
 
-<button class="btn" id="redirectBtn">
-REDIRECT
+<button class="redirect-btn" id="redirectBtn">
+    🚀 REDIRECT
 </button>
 
 <div id="paymentStatus" style="margin-top:15px;text-align:center;"></div>
@@ -911,7 +1645,7 @@ document.getElementById('paymentStatus');
 statusBox.innerHTML=
 `
 <div style="color:#ffb703;">
-Waiting for admin verification...
+Payment under review...
 </div>
 `;
 
@@ -1030,6 +1764,11 @@ error.innerHTML=
 '<div class="error">Please complete all fields.</div>';
 return;
 }
+if (parseInt(age, 10) < 18) {
+    error.innerHTML =
+    '<div class="error">You must be at least 18 years old to create a VibeChat account.</div>';
+    return;
+}
 
 saveData(
 STORAGE.profile,
@@ -1062,23 +1801,18 @@ showPage('profilePage');
    COPY USDT ADDRESS
 -------------------------- */
 
-const copyBtn = document.getElementById('copyAddressBtn');
+const subscribeBtn = document.getElementById('subscribeBtn');
 
-if(copyBtn){
+if (subscribeBtn) {
 
-copyBtn.addEventListener('click', async ()=>{
+    subscribeBtn.addEventListener('click', () => {
 
-const address =
-document.getElementById('walletAddress').innerText.trim();
+        window.open(
+            "https://www.paypal.com/ncp/payment/2SP3YD39MC3VL",
+            "_blank"
+        );
 
-try{
-await navigator.clipboard.writeText(address);
-showToast('USDT address copied');
-}catch{
-showToast('Copy failed');
-}
-
-});
+    });
 
 }
 
@@ -1098,6 +1832,12 @@ const file = e.target.files[0];
 if(!file) return;
 
 const reader = new FileReader();
+
+const fileName = document.getElementById('fileName');
+
+if(fileName){
+    fileName.textContent = file.name;
+}
 
 reader.onload = function(ev){
 
@@ -1177,12 +1917,12 @@ document.getElementById(
 ).innerHTML =
 `
 <div style="color:#ffb703;">
-Waiting for verification...
+Waiting for admin verification...
 </div>
 `;
 
 showToast(
-'Please complete payment. Waiting for verification.'
+'Please complete payment. Waiting for admin verification.'
 );
 
 });
@@ -1668,12 +2408,102 @@ location.reload();
 /* -------------------------
    AUTO RESUME STATE
 -------------------------- */
+const reviews=[
 
+["Michael","USA","Met amazing people within days."],
+["James","UK","Very professional experience."],
+["David","USA","The premium membership is worth it."],
+["Daniel","UK","Easy to use and beautifully designed."],
+["Matthew","USA","I've already made genuine friends."],
+["Andrew","UK","Fantastic community."],
+["Christopher","USA","Everything feels premium."],
+["Ryan","USA","Highly recommended."],
+["Joshua","UK","Smooth registration."],
+["Thomas","UK","Best platform I've joined."],
+["Joseph","USA","Love chatting here."],
+["Benjamin","UK","Excellent service."],
+["Anthony","USA","Beautiful interface."],
+["Charles","UK","Five stars."],
+["Kevin","USA","Very genuine members."],
+["Richard","UK","Looks trustworthy."],
+["Steven","USA","Easy Premium upgrade."],
+["Brian","USA","Amazing experience."],
+["Jonathan","UK","Found real conversations."],
+["Scott","USA","Definitely recommend."]
+
+];
+
+const track=document.getElementById("reviewsTrack");
+
+let html="";
+
+reviews.forEach(r=>{
+
+const initials=r[0].charAt(0);
+
+html+=`
+
+<div class="review-card">
+
+<div class="review-header">
+
+<div class="avatar">
+
+${initials}
+
+</div>
+
+<div>
+
+<div class="review-name">
+
+${r[0]}
+
+</div>
+
+<div class="review-country">
+
+${r[1]}
+
+</div>
+
+</div>
+
+</div>
+
+<div class="review-stars">
+
+★★★★★
+
+</div>
+
+<div class="review-text">
+
+"${r[2]}"
+
+</div>
+
+<div class="review-badge">
+
+✔ Verified Premium
+
+</div>
+
+</div>
+
+`;
+
+});
+
+/* duplicate for seamless scrolling */
+
+track.innerHTML=html+html;
 initializeApp();
 
 /* ==========================================================
    END OF PART 3
 ========================================================== */
+
 
 </script>
 
