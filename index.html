@@ -25,9 +25,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
 <!-- Firebase -->
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 <style>
 
@@ -1346,6 +1343,72 @@ transform:translateY(0);
 
 }
 
+/*=========================
+UPLOAD BUTTON
+=========================*/
+
+.upload-area{
+
+margin:25px 0;
+
+text-align:center;
+
+}
+
+.upload-btn{
+
+display:inline-flex;
+
+align-items:center;
+
+justify-content:center;
+
+gap:12px;
+
+padding:16px 35px;
+
+background:linear-gradient(135deg,#ff4fa3,#7b61ff);
+
+color:white;
+
+font-weight:600;
+
+font-size:18px;
+
+border-radius:14px;
+
+cursor:pointer;
+
+transition:.3s;
+
+box-shadow:0 12px 30px rgba(0,0,0,.3);
+
+}
+
+.upload-btn:hover{
+
+transform:translateY(-4px);
+
+box-shadow:0 18px 40px rgba(255,79,163,.4);
+
+}
+
+.upload-btn i{
+
+font-size:22px;
+
+}
+
+#fileName{
+
+margin-top:15px;
+
+color:#bbbbbb;
+
+font-size:15px;
+
+}
+
 </style>
 
 </head>
@@ -1722,10 +1785,29 @@ SUBSCRIBE NOW
 
 <h2>Upload Proof of Payment</h2>
 
+<div class="upload-area">
+
+<label for="paymentProof" class="upload-btn">
+
+<i class="fa-solid fa-cloud-arrow-up"></i>
+
+Upload Payment Screenshot
+
+</label>
+
 <input
 type="file"
 id="paymentProof"
-accept=".png,.jpg,.jpeg,image/png,image/jpeg">
+accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+hidden>
+
+<p id="fileName">
+
+
+
+</p>
+
+</div>
 
 <div class="previewBox">
 
@@ -1909,25 +1991,7 @@ Building meaningful friendships and relationships in a secure environment.
 
 <script>
 
-//==================================
-// FIREBASE CONFIG
-//==================================
 
-const firebaseConfig = {
-
-  apiKey: "AIzaSyCdvaT3MLj2SUHySMFKflqiz9JZTqSvjlo",
-  authDomain: "vibechat-8024f.firebaseapp.com",
-  projectId: "vibechat-8024f",
-  storageBucket: "vibechat-8024f.firebasestorage.app",
-  messagingSenderId: "137768170861",
-  appId: "1:137768170861:web:2f5f3f5e0759e8b5bad664",
-  measurementId: "G-ZS7JRJZ15Y"
-
-};
-
-firebase.initializeApp(firebaseConfig);
-
-const auth = firebase.auth();
 
 //===========================
 // PAGE ROUTER
@@ -2266,27 +2330,41 @@ signupBtn.innerHTML='Creating Account...';
 
 signupBtn.disabled=true;
 
-try{
+// Save account locally
 
-await auth.createUserWithEmailAndPassword(
+const user = {
 
-email,
+    email: email,
 
-password
+    username: document.getElementById("username").value,
+
+    age: age,
+
+    about: document.getElementById("about").value,
+
+    goal: document.getElementById("goal").value
+
+};
+
+// Store in browser
+
+localStorage.setItem(
+
+    "loveconnectUser",
+
+    JSON.stringify(user)
 
 );
 
 toast("Account created successfully!");
 
-showPage("premiumPage");
+signupBtn.innerHTML="Success!";
 
-}
+setTimeout(()=>{
 
-catch(error){
+    showPage("premiumPage");
 
-toast(error.message);
-
-}
+},1000);
 
 signupBtn.innerHTML="Create Account";
 
@@ -2322,11 +2400,15 @@ const paymentProof=document.getElementById("paymentProof");
 
 const preview=document.getElementById("previewImage");
 
+const fileName=document.getElementById("fileName");
+
 paymentProof.addEventListener("change",function(){
 
 const file=this.files[0];
 
 if(!file) return;
+
+fileName.innerHTML=file.name;
 
 const reader=new FileReader();
 
@@ -2641,6 +2723,10 @@ addMessage(
 },1200);
 
 });
+
+const user = JSON.parse(localStorage.getItem("loveconnectUser"));
+
+console.log(user);
 </script>
 
 </body>
