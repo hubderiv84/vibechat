@@ -1,1469 +1,1767 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VibeChat Premium Chat</title>
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>LoveConnect</title>
+
+<!-- Google Fonts -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<!-- Firebase -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 <style>
-:root{
-    --bg:#060816;
-    --card:rgba(255,255,255,.08);
-    --border:rgba(255,255,255,.15);
-    --text:#ffffff;
-    --muted:#b9c0d4;
-    --primary:#7c5cff;
-    --secondary:#00e5ff;
-    --success:#00d084;
-    --danger:#ff4d6d;
-    --warning:#ffb703;
-}
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Inter,Segoe UI,sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+html{
+scroll-behavior:smooth;
 }
 
 body{
-    background:linear-gradient(135deg,#060816,#0d1330,#161f4d);
-    color:var(--text);
-    overflow-x:hidden;
-    min-height:100vh;
+
+background:
+linear-gradient(135deg,#090c1a,#101d3b,#19274d);
+
+color:white;
+
+overflow-x:hidden;
+
+min-height:100vh;
+
 }
 
-.hidden{
-    display:none !important;
-}
+:root{
 
-/* LOADER */
+--primary:#ff4fa3;
 
-#loader{
-    position:fixed;
-    inset:0;
-    background:#050712;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:99999;
-    flex-direction:column;
-    gap:20px;
-}
+--secondary:#7b61ff;
 
-.loader-ring{
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    border:5px solid rgba(255,255,255,.1);
-    border-top:5px solid var(--secondary);
-    animation:spin 1s linear infinite;
-}
+--glass:rgba(255,255,255,.08);
 
-@keyframes spin{
-    to{transform:rotate(360deg);}
-}
+--border:rgba(255,255,255,.15);
 
-.loader-text{
-    font-size:20px;
-    font-weight:700;
-    letter-spacing:2px;
-}
+--shadow:0 20px 40px rgba(0,0,0,.4);
 
-/* FLOATING BACKGROUND */
-
-.bg{
-    position:fixed;
-    inset:0;
-    overflow:hidden;
-    z-index:-1;
-}
-
-.circle{
-    position:absolute;
-    border-radius:50%;
-    filter:blur(40px);
-    opacity:.3;
-    animation:float 18s infinite linear;
-}
-
-.c1{
-    width:250px;
-    height:250px;
-    background:#7c5cff;
-    left:-60px;
-    top:20%;
-}
-
-.c2{
-    width:300px;
-    height:300px;
-    background:#00e5ff;
-    right:-100px;
-    top:10%;
-}
-
-.c3{
-    width:220px;
-    height:220px;
-    background:#ff4d6d;
-    left:40%;
-    bottom:-80px;
-}
-
-@keyframes float{
-    0%{transform:translateY(0) rotate(0deg);}
-    50%{transform:translateY(-40px) rotate(180deg);}
-    100%{transform:translateY(0) rotate(360deg);}
 }
 
 .page{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:30px;
-    animation:fadeIn .5s ease;
+
+display:none;
+
+animation:fade .6s;
+
+min-height:100vh;
+
+padding-top:90px;
+
 }
 
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(15px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+.page.active{
+
+display:block;
+
 }
 
-.card{
-    width:100%;
-    max-width:480px;
-    background:var(--card);
-    backdrop-filter:blur(18px);
-    border:1px solid var(--border);
-    border-radius:28px;
-    padding:30px;
-    box-shadow:
-    0 0 30px rgba(0,229,255,.08),
-    0 0 60px rgba(124,92,255,.08);
+@keyframes fade{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+.container{
+
+width:min(1200px,92%);
+
+margin:auto;
+
+}
+
+button{
+
+cursor:pointer;
+
+border:none;
+
+outline:none;
+
+transition:.3s;
+
+}
+
+input,
+textarea,
+select{
+
+width:100%;
+
+padding:14px;
+
+border-radius:10px;
+
+border:1px solid rgba(255,255,255,.2);
+
+background:rgba(255,255,255,.08);
+
+color:white;
+
+outline:none;
+
+margin-top:8px;
+
+}
+
+textarea{
+
+resize:none;
+
+height:120px;
+
+}
+
+/*==============================
+NAVIGATION
+==============================*/
+
+nav{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:75px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:0 8%;
+
+background:rgba(255,255,255,.06);
+
+backdrop-filter:blur(18px);
+
+border-bottom:1px solid rgba(255,255,255,.1);
+
+z-index:999;
+
 }
 
 .logo{
-    text-align:center;
-    margin-bottom:10px;
-}
-
-.logo h1{
-    font-size:42px;
-    background:linear-gradient(90deg,#fff,#00e5ff,#7c5cff);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
 
-.logo p{
-    color:var(--muted);
-    margin-top:10px;
-}
+font-size:26px;
 
-.input-group{
-    margin-top:18px;
-}
+font-weight:700;
 
-.input-group label{
-    display:block;
-    margin-bottom:8px;
-    font-size:14px;
-}
+display:flex;
 
-.input{
-    width:100%;
-    border:none;
-    outline:none;
-    padding:15px;
-    border-radius:16px;
-    background:rgba(255,255,255,.07);
-    color:white;
-    border:1px solid rgba(255,255,255,.08);
-    transition:.3s;
-}
+gap:10px;
 
-.input:focus{
-    border-color:var(--secondary);
-    box-shadow:0 0 20px rgba(0,229,255,.2);
-}
+align-items:center;
 
-.checkbox{
-    margin-top:18px;
-    display:flex;
-    gap:10px;
-    align-items:center;
-    font-size:14px;
-}
+color:#ff4fa3;
 
-.btn{
-    width:100%;
-    border:none;
-    cursor:pointer;
-    margin-top:20px;
-    padding:15px;
-    border-radius:18px;
-    font-size:16px;
-    font-weight:700;
-    color:white;
-    background:linear-gradient(90deg,var(--primary),var(--secondary));
-    transition:.3s;
-    position:relative;
-    overflow:hidden;
 }
 
-.btn:hover{
-    transform:translateY(-2px);
-}
+nav ul{
 
-.btn:active{
-    transform:scale(.98);
-}
+display:flex;
 
-.error{
-    color:#ff7f94;
-    margin-top:10px;
-    font-size:14px;
-    animation:shake .3s;
-}
+gap:30px;
 
-@keyframes shake{
-    0%{transform:translateX(0);}
-    25%{transform:translateX(-5px);}
-    50%{transform:translateX(5px);}
-    75%{transform:translateX(-5px);}
-    100%{transform:translateX(0);}
-}
+list-style:none;
 
-.back-btn{
-    position:absolute;
-    left:25px;
-    top:25px;
-    background:red (255,255,255,.1);
-    border:none;
-    color:red;
-    padding:10px 16px;
-    border-radius:14px;
-    cursor:pointer;
 }
 
-.page-title{
-    text-align:center;
-    margin-bottom:25px;
-}
+nav a{
 
-.page-title h2{
-    font-size:32px;
-}
+text-decoration:none;
 
-.page-title p{
-    color:var(--muted);
-    margin-top:8px;
-}
+color:white;
 
-.toast-container{
-    position:fixed;
-    top:20px;
-    right:20px;
-    z-index:999999;
-}
+transition:.3s;
 
-.toast{
-    background:rgba(0,0,0,.8);
-    color:white;
-    padding:14px 18px;
-    border-radius:14px;
-    margin-bottom:10px;
-    animation:toastIn .4s ease;
-}
+font-weight:500;
 
-@keyframes toastIn{
-    from{
-        opacity:0;
-        transform:translateX(100px);
-    }
-    to{
-        opacity:1;
-        transform:translateX(0);
-    }
 }
 
-/* PREMIUM */
+nav a:hover{
 
-.premium-card{
-    max-width:700px;
-}
-
-.price{
-    font-size:48px;
-    text-align:center;
-    margin:20px 0;
-    color:var(--secondary);
-}
+color:#ff4fa3;
 
-.benefits{
-    margin-top:20px;
 }
 
-.benefits li{
-    margin:12px 0;
-}
+/*==============================
+LOADER
+==============================*/
 
-.wallet-box{
-    margin-top:25px;
-    background:rgba(255,255,255,.05);
-    padding:18px;
-    border-radius:18px;
-    word-break:break-all;
-}
+#loader{
 
-.copy-btn{
-    margin-top:12px;
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:12px;
-    background:var(--secondary);
-    color:black;
-    font-weight:700;
-    cursor:pointer;
-}
+position:fixed;
 
-.preview{
-    display:none;
-    width:140px;
-    height:140px;
-    margin:20px auto 0;
-    border-radius:16px;
-    border:2px solid rgba(255,255,255,.15);
-    object-fit:contain;
-padding:3px;
-    background:rgba(255,255,255,.05);
-    box-shadow:0 8px 20px rgba(0,0,0,.25);
-    transition:.3s;
-}
+inset:0;
 
-.preview:hover{
-    transform:scale(1.05);
-}
+background:#081120;
 
-/* CHAT PAGE */
+display:flex;
 
-.chat-page{
-    display:none;
-    height:100vh;
-}
+justify-content:center;
 
-.sidebar{
-    width:320px;
-    background:rgba(255,255,255,.06);
-    backdrop-filter:blur(16px);
-    border-right:1px solid rgba(255,255,255,.08);
-    display:flex;
-    flex-direction:column;
-}
+align-items:center;
 
-.chat-main{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-}
+z-index:99999;
 
-.profile-box{
-    padding:20px;
-    border-bottom:1px solid rgba(255,255,255,.08);
-}
+transition:.6s;
 
-.online-dot{
-    width:10px;
-    height:10px;
-    background:#00ff88;
-    border-radius:50%;
-    display:inline-block;
 }
 
-.search-box{
-    padding:15px;
-}
+.loader-box{
 
-.chat-list{
-    flex:1;
-    overflow:auto;
-}
+text-align:center;
 
-.chat-item{
-    padding:15px;
-    cursor:pointer;
-    transition:.3s;
 }
 
-.chat-item:hover{
-    background:rgba(255,255,255,.05);
-}
+.spinner{
 
-.messages{
-    flex:1;
-    overflow:auto;
-    padding:20px;
-}
+width:70px;
 
-.message{
-    max-width:70%;
-    padding:12px;
-    border-radius:16px;
-    margin-bottom:12px;
-}
+height:70px;
 
-.sent{
-    margin-left:auto;
-    background:linear-gradient(90deg,#7c5cff,#00e5ff);
-}
+border:5px solid rgba(255,255,255,.2);
 
-.received{
-    background:rgba(255,255,255,.08);
-}
+border-top:5px solid #ff4fa3;
 
-.time{
-    display:block;
-    margin-top:5px;
-    font-size:11px;
-    opacity:.7;
-}
+border-radius:50%;
 
-.chat-input{
-    padding:15px;
-    display:flex;
-    gap:10px;
-    border-top:1px solid rgba(255,255,255,.08);
-}
+animation:spin 1s linear infinite;
 
-.chat-input input{
-    flex:1;
-}
+margin:auto;
 
-.typing{
-    padding:0 20px 10px;
-    color:var(--muted);
-    font-size:13px;
-}
+margin-bottom:20px;
 
-.admin-panel{
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    width:280px;
-    background:rgba(0,0,0,.7);
-    backdrop-filter:blur(10px);
-    border-radius:20px;
-    padding:15px;
-    z-index:9999;
 }
 
-.admin-panel h4{
-    margin-bottom:10px;
-}
+@keyframes spin{
 
-.admin-panel select{
-    width:100%;
-    padding:10px;
-    border-radius:10px;
-    margin-top:10px;
-}
+to{
 
-@media(max-width:900px){
+transform:rotate(360deg);
 
-.chat-page{
-    flex-direction:column;
 }
 
-.sidebar{
-    width:100%;
-    height:280px;
 }
 
-}
+/*==============================
+PARTICLES
+==============================*/
 
-.upload-btn{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    width:100%;
-    padding:16px;
-    border-radius:18px;
-    cursor:pointer;
-    font-weight:700;
-    font-size:16px;
-    color:#fff;
-    background:linear-gradient(135deg,#7c5cff,#00e5ff);
-    border:none;
-    transition:.3s;
-    box-shadow:0 8px 20px rgba(0,229,255,.25);
-}
+#particles{
 
-.upload-btn:hover{
-    transform:translateY(-3px);
-    box-shadow:0 12px 30px rgba(0,229,255,.35);
-}
+position:fixed;
 
-.upload-btn:active{
-    transform:scale(.98);
-}
+top:0;
 
-.file-name{
-    margin-top:12px;
-    text-align:center;
-    color:var(--muted);
-    font-size:14px;
-}
+left:0;
 
-.select-input{
-    width:100%;
-    padding:15px 18px;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.12);
-    background:rgba(255,255,255,.07);
-    color:#fff;
-    font-size:15px;
-    outline:none;
-    cursor:pointer;
-    transition:.3s;
-    appearance:none;
-    -webkit-appearance:none;
-    -moz-appearance:none;
+width:100%;
 
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5L8 12l6.5-6.5z'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;
-    background-position:right 18px center;
-    background-size:16px;
-}
+height:100%;
 
-.select-input:hover{
-    border-color:rgba(0,229,255,.5);
-}
+overflow:hidden;
 
-.select-input:focus{
-    border-color:var(--secondary);
-    box-shadow:0 0 18px rgba(0,229,255,.25);
-}
+z-index:-1;
 
-.select-input option{
-    background:#10172e;
-    color:#fff;
-    padding:10px;
 }
 
-/* PREMIUM SUBSCRIBE BUTTON */
+.particle{
 
-.subscribe-btn{
-    position:relative;
-    width:100%;
-    padding:18px;
-    margin-top:20px;
-    border:none;
-    border-radius:18px;
-    cursor:pointer;
-    overflow:hidden;
+position:absolute;
 
-    font-size:18px;
-    font-weight:700;
-    letter-spacing:.5px;
+border-radius:50%;
 
-    color:#fff;
+background:rgba(255,255,255,.15);
 
-    background:linear-gradient(
-        135deg,
-        #00c853,
-        #2e7d32
-    );
+animation:float linear infinite;
 
-    box-shadow:
-        0 0 20px rgba(0,255,100,.4),
-        0 0 50px rgba(255,215,0,.25);
-
-    transition:.35s ease;
 }
-
-/* rotating border */
-
-.subscribe-btn::before{
-
-    content:"";
-
-    position:absolute;
-    inset:-3px;
 
-    border-radius:20px;
+@keyframes float{
 
-    background:conic-gradient(
+0%{
 
-        #00ff66,
-        #00ffff,
-        gold,
-        #ff00ff,
-        #00ff66,
-        #00ffff,
-        gold,
-        #ff0000,
-        #00ff66
+transform:translateY(100vh);
 
-    );
+opacity:0;
 
-    animation:rotateBorder 2.5s linear infinite;
-
-    z-index:-2;
-
 }
-
-/* button surface */
-
-.subscribe-btn::after{
 
-    content:"";
+20%{
 
-    position:absolute;
+opacity:1;
 
-    inset:3px;
-
-    border-radius:16px;
-
-    background:linear-gradient(
-        135deg,
-        #00b140,
-        #006d2c
-    );
-
-    z-index:-1;
-
 }
-
-/* moving shine */
 
-.subscribe-btn span{
+100%{
 
-    position:relative;
-    z-index:2;
+transform:translateY(-100px);
 
-}
+opacity:0;
 
-.subscribe-btn::selection{
-    background:none;
 }
-
-/* light sweep */
-
-.subscribe-btn .shine{
-
-    position:absolute;
-
-    top:-60%;
-
-    left:-50%;
-
-    width:40%;
-
-    height:220%;
-
-    background:rgba(255,255,255,.35);
-
-    transform:rotate(25deg);
 
-    filter:blur(5px);
-
-    animation:shineMove 2.8s infinite;
-
 }
-
-/* hover */
-
-.subscribe-btn:hover{
 
-    transform:translateY(-3px) scale(1.03);
+/*==============================
+TOAST
+==============================*/
 
-    box-shadow:
+#toast{
 
-        0 0 25px #00ff99,
+position:fixed;
 
-        0 0 45px gold,
+right:30px;
 
-        0 0 70px cyan;
+bottom:30px;
 
-}
-
-/* click */
+padding:18px 25px;
 
-.subscribe-btn:active{
-
-    transform:scale(.96);
-
-}
+background:#1b2539;
 
-/* glowing pulse */
+border-left:5px solid #ff4fa3;
 
-.subscribe-btn{
+border-radius:10px;
 
-    animation:
+display:none;
 
-        pulseGlow 1.8s infinite alternate,
+z-index:9999;
 
-        colorShift 8s linear infinite;
+box-shadow:0 10px 30px rgba(0,0,0,.4);
 
 }
 
-/* rotating border */
+/*==============================
+RIPPLE BUTTON
+==============================*/
 
-@keyframes rotateBorder{
+.ripple{
 
-    from{
+position:relative;
 
-        transform:rotate(0deg);
+overflow:hidden;
 
-    }
-
-    to{
-
-        transform:rotate(360deg);
-
-    }
-
 }
-
-/* pulse */
-
-@keyframes pulseGlow{
-
-    from{
-
-        box-shadow:
-
-        0 0 20px lime,
-
-        0 0 35px gold;
 
-    }
+.ripple span{
 
-    to{
+position:absolute;
 
-        box-shadow:
+border-radius:50%;
 
-        0 0 35px cyan,
+transform:scale(0);
 
-        0 0 65px #00ff99,
+background:rgba(255,255,255,.4);
 
-        0 0 90px gold;
+animation:ripple .6s linear;
 
-    }
-
 }
-
-/* shine */
-
-@keyframes shineMove{
-
-    0%{
 
-        left:-60%;
+@keyframes ripple{
 
-    }
+to{
 
-    100%{
+transform:scale(4);
 
-        left:140%;
+opacity:0;
 
-    }
-
 }
-
-/* changing colors */
-
-@keyframes colorShift{
-
-    0%{
-
-        filter:hue-rotate(0deg);
-
-    }
-
-    100%{
-
-        filter:hue-rotate(360deg);
-
-    }
-
 }
 
-/* PREMIUM REDIRECT BUTTON */
+/*==============================
+RESPONSIVE
+==============================*/
 
-.redirect-btn{
-    position:relative;
-    width:100%;
-    margin-top:20px;
-    padding:16px;
-    border:none;
-    border-radius:18px;
-    cursor:pointer;
-    overflow:hidden;
+@media(max-width:768px){
 
-    font-size:17px;
-    font-weight:700;
-    letter-spacing:1px;
-    color:#fff;
+nav{
 
-    background:linear-gradient(
-        135deg,
-        #FFD700,
-        #C9A227,
-        #00C853
-    );
+padding:15px;
 
-    background-size:300% 300%;
+flex-direction:column;
 
-    animation:
-        redirectGradient 6s ease infinite,
-        redirectPulse 2s infinite alternate;
+height:auto;
 
-    transition:.3s ease;
 }
 
-/* Rotating glowing border */
+nav ul{
 
-.redirect-btn::before{
+margin-top:15px;
 
-    content:"";
+gap:15px;
 
-    position:absolute;
-    inset:-3px;
+flex-wrap:wrap;
 
-    border-radius:20px;
+justify-content:center;
 
-    background:conic-gradient(
-        gold,
-        #fff176,
-        #00ff88,
-        gold,
-        #00ff88,
-        #FFD700,
-        gold
-    );
-
-    animation:redirectRotate 3s linear infinite;
-
-    z-index:-2;
 }
-
-/* Button face */
-
-.redirect-btn::after{
-
-    content:"";
 
-    position:absolute;
-    inset:3px;
-
-    border-radius:16px;
-
-    background:linear-gradient(
-        135deg,
-        #b8860b,
-        #0f8b4c
-    );
-
-    z-index:-1;
 }
-
-/* Shine sweep */
 
-.redirect-btn .shine{
+/*====================================
+HERO
+=====================================*/
 
-    position:absolute;
-    top:-60%;
-    left:-60%;
-    width:40%;
-    height:220%;
+.hero{
 
-    background:rgba(255,255,255,.45);
+min-height:100vh;
 
-    transform:rotate(25deg);
+display:flex;
 
-    filter:blur(5px);
+align-items:center;
 
-    animation:redirectShine 2.5s infinite;
 }
 
-/* Hover */
+.hero-content{
 
-.redirect-btn:hover{
+text-align:center;
 
-    transform:translateY(-3px) scale(1.03);
+padding:60px 0;
 
-    box-shadow:
-        0 0 20px gold,
-        0 0 40px #FFD700,
-        0 0 60px #00ff88,
-        0 0 80px rgba(255,215,0,.6);
 }
 
-/* Click */
+.hero-title{
 
-.redirect-btn:active{
+font-size:70px;
 
-    transform:scale(.97);
+font-weight:700;
 
-}
-
-/* Animated gradient */
+background:linear-gradient(90deg,#ff4fa3,#7b61ff,#5ce1ff);
 
-@keyframes redirectGradient{
+background-size:300%;
 
-    0%{
-        background-position:0% 50%;
-    }
+-webkit-background-clip:text;
 
-    50%{
-        background-position:100% 50%;
-    }
+-webkit-text-fill-color:transparent;
 
-    100%{
-        background-position:0% 50%;
-    }
+animation:gradientMove 6s infinite linear;
 
 }
-
-/* Pulse */
-
-@keyframes redirectPulse{
-
-    from{
 
-        box-shadow:
-            0 0 15px gold,
-            0 0 30px #00ff88;
+@keyframes gradientMove{
 
-    }
+0%{
 
-    to{
+background-position:0%;
 
-        box-shadow:
-            0 0 35px gold,
-            0 0 55px #00ff88,
-            0 0 75px #FFD700;
-
-    }
-
 }
 
-/* Rotating border */
+100%{
 
-@keyframes redirectRotate{
+background-position:300%;
 
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
-
 }
-
-/* Shine */
 
-@keyframes redirectShine{
-
-    0%{
-        left:-60%;
-    }
-
-    100%{
-        left:150%;
-    }
-
 }
 
-/* ============================
-      PREMIUM REVIEWS
-============================ */
+.hero-subtitle{
 
-.reviews-section{
+margin:20px 0;
 
-    width:100%;
+font-size:30px;
 
-    margin-top:45px;
+font-weight:500;
 
-    overflow:hidden;
-
 }
 
-.reviews-title{
+.hero-content p{
 
-    text-align:center;
+margin:20px auto;
 
-    color:#fff;
+max-width:900px;
 
-    font-size:22px;
+line-height:1.9;
 
-    font-weight:700;
+font-size:18px;
 
-    margin-bottom:22px;
+color:#d5d5d5;
 
 }
-
-.reviews-marquee{
 
-    overflow:hidden;
+.hero-btn{
 
-    width:100%;
+margin-top:40px;
 
-}
-
-.reviews-track{
+padding:18px 55px;
 
-    display:flex;
+font-size:22px;
 
-    gap:22px;
+border-radius:60px;
 
-    width:max-content;
+background:linear-gradient(45deg,#ff4fa3,#7b61ff);
 
-    animation:marquee 55s linear infinite;
+color:white;
 
-}
+font-weight:bold;
 
-.reviews-track:hover{
+box-shadow:0 15px 40px rgba(255,0,120,.4);
 
-    animation-play-state:paused;
+transition:.35s;
 
 }
-
-.review-card{
 
-    width:240px;
+.hero-btn:hover{
 
-    min-height:145px;
+transform:translateY(-6px) scale(1.03);
 
-    flex-shrink:0;
-
-    padding:18px;
-
-    border-radius:22px;
+}
 
-    background:rgba(255,255,255,.08);
+/*====================================
+REVIEWS
+=====================================*/
 
-    backdrop-filter:blur(18px);
+.reviews{
 
-    border:1px solid rgba(255,255,255,.12);
+padding:70px 0;
 
-    box-shadow:
+overflow:hidden;
 
-    0 10px 35px rgba(0,0,0,.25);
+}
 
-    transition:.35s;
+.reviews h2{
 
-}
+text-align:center;
 
-.review-card:hover{
+margin-bottom:40px;
 
-    transform:translateY(-8px);
+font-size:38px;
 
 }
 
-.review-header{
+.review-track{
 
-    display:flex;
+overflow:hidden;
 
-    align-items:center;
+white-space:nowrap;
 
-    gap:12px;
-
 }
-
-.avatar{
 
-    width:46px;
+#reviewContainer{
 
-    height:46px;
+display:inline-flex;
 
-    border-radius:50%;
+animation:scrollReviews 45s linear infinite;
 
-    background:linear-gradient(135deg,#FFD700,#00C853);
-
-    display:flex;
+}
 
-    align-items:center;
+.review-box{
 
-    justify-content:center;
+width:280px;
 
-    font-weight:bold;
+height:220px;
 
-    color:#fff;
+margin-right:25px;
 
-    font-size:18px;
+padding:25px;
 
-}
+background:rgba(255,255,255,.08);
 
-.review-name{
+backdrop-filter:blur(15px);
 
-    color:white;
+border:1px solid rgba(255,255,255,.15);
 
-    font-weight:bold;
+border-radius:20px;
 
-}
+display:flex;
 
-.review-country{
+flex-direction:column;
 
-    color:#00d084;
+justify-content:space-between;
 
-    font-size:13px;
+box-shadow:0 15px 35px rgba(0,0,0,.3);
 
 }
-
-.review-stars{
 
-    color:#FFD700;
+.review-box h3{
 
-    margin:12px 0;
+font-size:20px;
 
-    letter-spacing:2px;
+color:#ff4fa3;
 
 }
 
-.review-text{
+.review-box small{
 
-    color:#ddd;
+color:#bbb;
 
-    font-size:13px;
-
-    line-height:1.5;
-
 }
-
-.review-badge{
 
-    margin-top:14px;
+.review-box p{
 
-    color:#00ff99;
+white-space:normal;
 
-    font-size:12px;
+line-height:1.6;
 
-    font-weight:bold;
+margin-top:10px;
 
 }
 
-@keyframes marquee{
+@keyframes scrollReviews{
 
-from{
+0%{
 
 transform:translateX(0);
 
 }
 
-to{
+100%{
 
 transform:translateX(-50%);
 
 }
 
 }
+
+@media(max-width:768px){
+
+.hero-title{
+
+font-size:42px;
+
+}
+
+.hero-subtitle{
+
+font-size:22px;
+
+}
+
+.hero-content p{
+
+font-size:16px;
+
+}
+
+.review-box{
+
+width:240px;
+
+}
+
+}
+
+/*=============================
+SIGNUP PAGE
+==============================*/
+
+.signup-wrapper{
+
+max-width:750px;
+
+margin:40px auto;
+
+padding:40px;
+
+background:rgba(255,255,255,.08);
+
+border:1px solid rgba(255,255,255,.15);
+
+backdrop-filter:blur(18px);
+
+border-radius:25px;
+
+box-shadow:var(--shadow);
+
+}
+
+.signup-wrapper h1{
+
+font-size:42px;
+
+margin-bottom:15px;
+
+text-align:center;
+
+}
+
+.signup-text{
+
+text-align:center;
+
+margin-bottom:40px;
+
+color:#cccccc;
+
+}
+
+.input-group{
+
+margin-bottom:25px;
+
+}
+
+.input-group label{
+
+display:block;
+
+margin-bottom:8px;
+
+}
+
+.password-box{
+
+position:relative;
+
+}
+
+.toggle-password{
+
+position:absolute;
+
+right:18px;
+
+top:50px;
+
+cursor:pointer;
+
+color:#aaa;
+
+}
+
+.terms{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+margin:25px 0;
+
+}
+
+.terms input{
+
+width:auto;
+
+}
+
+#signupBtn{
+
+width:100%;
+
+padding:18px;
+
+font-size:18px;
+
+font-weight:600;
+
+border-radius:12px;
+
+background:linear-gradient(45deg,#ff4fa3,#7b61ff);
+
+color:white;
+
+}
+
+#signupBtn:disabled{
+
+opacity:.5;
+
+cursor:not-allowed;
+
+}
+
+/*=============================
+PREMIUM PAGE
+==============================*/
+
+.premium-box{
+
+max-width:900px;
+
+margin:40px auto;
+
+padding:40px;
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(20px);
+
+border-radius:25px;
+
+border:1px solid rgba(255,255,255,.15);
+
+box-shadow:var(--shadow);
+
+}
+
+.premium-box h1{
+
+text-align:center;
+
+font-size:46px;
+
+margin-bottom:20px;
+
+}
+
+.premium-intro{
+
+text-align:center;
+
+margin-bottom:30px;
+
+line-height:1.8;
+
+color:#cccccc;
+
+}
+
+.benefits{
+
+list-style:none;
+
+margin:30px 0;
+
+}
+
+.benefits li{
+
+padding:12px 0;
+
+font-size:18px;
+
+}
+
+.benefits i{
+
+color:#43ff8d;
+
+margin-right:10px;
+
+}
+
+.price{
+
+font-size:50px;
+
+font-weight:bold;
+
+text-align:center;
+
+margin:40px 0;
+
+}
+
+.price span{
+
+font-size:22px;
+
+color:#bbbbbb;
+
+}
+
+#paypalBtn{
+
+display:block;
+
+margin:auto;
+
+padding:18px 60px;
+
+border-radius:50px;
+
+font-size:22px;
+
+background:linear-gradient(45deg,#ff4fa3,#7b61ff);
+
+color:white;
+
+margin-bottom:40px;
+
+}
+
+.previewBox{
+
+margin:20px 0;
+
+width:160px;
+
+height:160px;
+
+border:2px dashed rgba(255,255,255,.3);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+overflow:hidden;
+
+border-radius:12px;
+
+}
+
+.previewBox img{
+
+width:100%;
+
+height:100%;
+
+object-fit:cover;
+
+display:none;
+
+}
+
+#submitProof{
+
+padding:16px 45px;
+
+background:#43c465;
+
+color:white;
+
+border-radius:10px;
+
+font-size:18px;
+
+margin-top:20px;
+
+}
+
+#paymentStatus{
+
+margin-top:30px;
+
+font-size:18px;
+
+line-height:1.8;
+
+}
+
+/*============================
+CHAT
+=============================*/
+
+.chat-container{
+
+display:flex;
+
+height:calc(100vh - 75px);
+
+}
+
+.sidebar{
+
+width:320px;
+
+background:rgba(255,255,255,.06);
+
+backdrop-filter:blur(15px);
+
+overflow:auto;
+
+border-right:1px solid rgba(255,255,255,.1);
+
+}
+
+.sidebar h2{
+
+padding:20px;
+
+}
+
+.contact{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+padding:15px;
+
+cursor:pointer;
+
+transition:.3s;
+
+border-bottom:1px solid rgba(255,255,255,.05);
+
+}
+
+.contact:hover{
+
+background:rgba(255,255,255,.08);
+
+}
+
+.contact-avatar{
+
+width:50px;
+
+height:50px;
+
+border-radius:50%;
+
+background:#7b61ff;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:20px;
+
+}
+
+.online{
+
+width:10px;
+
+height:10px;
+
+background:#00ff7f;
+
+border-radius:50%;
+
+margin-left:auto;
+
+}
+
+.chat-main{
+
+flex:1;
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+.chat-top{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:20px;
+
+background:rgba(255,255,255,.06);
+
+}
+
+.chat-user{
+
+display:flex;
+
+gap:15px;
+
+align-items:center;
+
+}
+
+.avatar{
+
+width:60px;
+
+height:60px;
+
+border-radius:50%;
+
+background:#ff4fa3;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:25px;
+
+}
+
+.chat-icons{
+
+display:flex;
+
+gap:20px;
+
+font-size:22px;
+
+cursor:pointer;
+
+}
+
+#chatMessages{
+
+flex:1;
+
+overflow-y:auto;
+
+padding:30px;
+
+}
+
+.message{
+
+padding:14px 18px;
+
+margin:12px 0;
+
+max-width:60%;
+
+border-radius:18px;
+
+position:relative;
+
+}
+
+.sent{
+
+background:#7b61ff;
+
+margin-left:auto;
+
+}
+
+.received{
+
+background:#2a334a;
+
+}
+
+.time{
+
+display:block;
+
+font-size:11px;
+
+margin-top:8px;
+
+opacity:.7;
+
+}
+
+.typing{
+
+font-style:italic;
+
+opacity:.7;
+
+padding:10px;
+
+}
+
+.chat-input{
+
+display:flex;
+
+gap:10px;
+
+padding:20px;
+
+background:rgba(255,255,255,.06);
+
+}
+
+.chat-input input{
+
+flex:1;
+
+margin:0;
+
+}
+
+.chat-input button{
+
+padding:14px 18px;
+
+border-radius:10px;
+
+background:#ff4fa3;
+
+color:white;
+
+}
+
+@media(max-width:850px){
+
+.sidebar{
+
+display:none;
+
+}
+
+}
+
+/*=============================
+FOOTER
+==============================*/
+
+footer{
+
+margin-top:60px;
+
+padding:50px 8%;
+
+background:rgba(0,0,0,.35);
+
+border-top:1px solid rgba(255,255,255,.1);
+
+}
+
+.footer-content{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+flex-wrap:wrap;
+
+gap:30px;
+
+}
+
+.footer-links{
+
+display:flex;
+
+gap:25px;
+
+flex-wrap:wrap;
+
+}
+
+.footer-links a{
+
+color:#dddddd;
+
+text-decoration:none;
+
+transition:.3s;
+
+}
+
+.footer-links a:hover{
+
+color:#ff4fa3;
+
+}
+
+.copyright{
+
+text-align:center;
+
+margin-top:30px;
+
+color:#999;
+
+}
+
+@media(max-width:768px){
+
+.footer-content{
+
+flex-direction:column;
+
+text-align:center;
+
+}
+
+}
+
+.active-nav{
+
+color:#ff4fa3 !important;
+
+font-weight:700;
+
+}
+
+.reveal{
+
+opacity:0;
+
+transform:translateY(40px);
+
+transition:.8s;
+
+}
+
+.reveal.show{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
 </style>
+
 </head>
+
 <body>
+    <!-- =========================
+     FLOATING PARTICLES
+========================== -->
+
+<div id="particles"></div>
+
+<!-- =========================
+     PAGE LOADER
+========================== -->
 
 <div id="loader">
-<div class="loader-ring"></div>
-<div class="loader-text">VibeChat</div>
+
+    <div class="loader-box">
+
+        <div class="spinner"></div>
+
+        <h2>LoveConnect</h2>
+
+        <p>Loading...</p>
+
+    </div>
+
 </div>
 
-<div class="bg">
-<div class="circle c1"></div>
-<div class="circle c2"></div>
-<div class="circle c3"></div>
+<!-- =========================
+     TOAST NOTIFICATION
+========================== -->
+
+<div id="toast"></div>
+
+<!-- =========================
+     NAVIGATION
+========================== -->
+
+<nav>
+
+    <div class="logo">
+
+        <i class="fa-solid fa-heart"></i>
+
+        LoveConnect
+
+    </div>
+
+    <ul>
+
+        <li>
+
+            <a href="#" onclick="showPage('homePage')">
+
+                Home
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="#" onclick="showPage('signupPage')">
+
+                Join
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="#" onclick="showPage('premiumPage')">
+
+                Premium
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="#" onclick="showPage('chatPage')">
+
+                Chat
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+<!-- =====================================================
+HOME PAGE
+====================================================== -->
+
+<section class="page active" id="homePage">
+
+<div class="hero">
+
+<div class="container hero-content">
+
+<h1 class="hero-title">
+
+Welcome to LoveConnect
+
+</h1>
+
+<h2 class="hero-subtitle">
+
+Meet Real People. Build Real Connections.
+
+</h2>
+
+<p>
+
+LoveConnect is a modern platform created for people looking to build genuine friendships, meaningful relationships, and lifelong partnerships. Whether you're searching for companionship, dating opportunities, or marriage, our secure platform helps you connect with verified members worldwide.
+
+</p>
+
+<p>
+
+Our advanced matching system helps you discover compatible people based on your interests and relationship goals. Enjoy smooth messaging, private conversations, and premium communication tools within a safe and welcoming environment.
+
+</p>
+
+<p>
+
+We prioritize member safety through secure authentication, profile monitoring, and privacy protection. Thousands of members trust LoveConnect every day to meet genuine people from around the world.
+
+</p>
+
+<p>
+
+Upgrade to Premium Membership for unlimited messaging, priority visibility, exclusive community access, and many more exciting features designed to improve your dating experience.
+
+</p>
+
+<button class="hero-btn"
+
+onclick="showPage('signupPage')">
+
+GET STARTED
+
+</button>
+
 </div>
 
-<div class="toast-container" id="toastContainer"></div>
+</div>
 
-<!-- SIGNUP PAGE -->
+<!-- ===========================
+REVIEWS
+=========================== -->
+
+<section class="reviews">
+
+<h2>
+
+What Members Say
+
+</h2>
+
+<div class="review-track">
+
+<!-- Reviews duplicated later by JavaScript -->
+
+<div id="reviewContainer"></div>
+
+</div>
+
+</section>
+
+</section>
+<!-- =====================================================
+SIGNUP PAGE
+===================================================== -->
 
 <section class="page" id="signupPage">
 
-<div class="card">
+<div class="container">
 
-<div class="logo">
-<h1>Welcome to VibeChat</h1>
- 
+<div class="signup-wrapper">
 
-        <p>
-            VibeChat is a premium social platform designed to help people build
-            meaningful and lasting connections in a secure, modern, and engaging
-            environment.
-        </p>
+<h1>Create Your Account</h1>
 
-        <p>
-            Whether you're looking for friendship, dating, a serious relationship,
-            professional networking, or simply meeting new people from around the
-            world, VibeChat provides the perfect space to connect with like-minded
-            individuals.
-        </p>
+<p class="signup-text">
 
-        <p>
-            Complete your registration, create your profile, and unlock premium
-            access to start chatting with verified members. Our goal is to create
-            a trusted community where genuine conversations and valuable
-            relationships can flourish.
-        </p>
+Join thousands of members looking for genuine friendships and meaningful relationships.
 
-        <p>
-            Join VibeChat today and begin your journey toward meaningful
-            connections and exciting new opportunities.
-        </p>
+</p>
 
-</div>
+<form id="signupForm">
 
 <div class="input-group">
+
 <label>Email</label>
-<input type="email"  id="email" class="input" placeholder="Email"> 
+
+<input
+type="email"
+id="email"
+placeholder="Enter your email"
+required>
+
 </div>
 
-<div class="input-group">
+<div class="input-group password-box">
+
 <label>Password</label>
-<input type="password" id="password" class="input" placeholder="Password">
+
+<input
+type="password"
+id="password"
+placeholder="Create password"
+required>
+
+<i class="fa-solid fa-eye toggle-password"
+onclick="togglePassword('password',this)"></i>
+
 </div>
 
-<div class="input-group">
+<div class="input-group password-box">
+
 <label>Confirm Password</label>
-<input type="password" id="confirmPassword" class="input" placeholder="ConfirmPassword">
-</div>
 
-<div class="checkbox">
-<input type="checkbox" id="terms">
-<label for="terms">
-    By signing up you agree to our Terms & Conditions
-</label>
-</div>
+<input
+type="password"
+id="confirmPassword"
+placeholder="Confirm password"
+required>
 
-<div id="signupError"></div>
+<i class="fa-solid fa-eye toggle-password"
+onclick="togglePassword('confirmPassword',this)"></i>
 
-<button class="btn" id="signupBtn">
-Create Account
-</button>
-
-
-</div>
-
-</div>
-</div>
-
-
-</section>
-
-<section class="reviews-section">
-
-    <div class="reviews-title">
-
-        ⭐ Trusted by Premium Members
-
-    </div>
-
-    <div class="reviews-marquee">
-
-        <div class="reviews-track" id="reviewsTrack"></div>
-
-    </div>
-
-</section>
-
-<!-- PROFILE PAGE -->
-
-<section class="page hidden" id="profilePage">
-
-<button class="back-btn" id="backToSignup">
-← Back
-</button>
-
-<div class="card">
-
-<div class="page-title">
-<h2>Create Profile</h2>
-<p>Tell others about yourself</p>
 </div>
 
 <div class="input-group">
+
 <label>Username</label>
-<input class="input" id="username" placeholder="Username">
+
+<input
+type="text"
+id="username"
+required>
+
 </div>
 
 <div class="input-group">
-<label>Age (18+ only)</label>
-<input class="input" type="number" id="age" placeholder="Age (18+ only)">
-</div>    
 
+<label>Age</label>
 
+<input
+type="number"
+id="age"
+min="18"
+required>
 
-<div class="input-group">
-<label>About</label>
-<input class="input" id="hobbies" placeholder="Tell more about yourself ">
 </div>
 
 <div class="input-group">
+
+<label>About Me</label>
+
+<textarea
+id="about"
+required></textarea>
+
+</div>
+
+<div class="input-group">
+
 <label>Relationship Goal</label>
-<select id="relationship" class="select-input">
 
-    <option value="">Choose your relationship goal</option>
+<select id="goal" required>
 
-    <optgroup label="💕 Relationships">
-        <option>Dating</option>
-        <option>Serious Relationship</option>
-        <option>Marriage</option>
-    </optgroup>
+<option value="">Choose...</option>
 
-    <optgroup label="🤝 Social">
-        <option>Friendship</option>
-        <option>Networking</option>
-        <option>Travel Partner</option>
-    </optgroup>
+<option>Friendship</option>
 
-    <optgroup label="🌍 Other">
-        <option>Language Exchange</option>
-        <option>Other</option>
-    </optgroup>
+<option>Long-term Relationship</option>
+
+<option>Marriage</option>
+
+<option>Dating</option>
+
+<option>Casual Dating</option>
+
+<option>Serious Relationship</option>
+
+<option>Life Partner</option>
 
 </select>
+
 </div>
 
-<div id="profileError"></div>
+<label class="terms">
 
-<button class="btn" id="profileBtn">
-Submit Profile
+<input
+type="checkbox"
+id="agree">
+
+I agree to the Terms and Conditions
+
+</label>
+
+<button
+id="signupBtn"
+type="submit"
+disabled>
+
+Create Account
+
 </button>
+
+</form>
+
+</div>
 
 </div>
 
 </section>
 
-<!-- PART 1 END -->
+<!-- =====================================================
+PREMIUM PAGE
+===================================================== -->
 
-<!-- PREMIUM PAGE -->
+<section class="page" id="premiumPage">
 
-<section class="page hidden" id="premiumPage">
-<button class="back-btn" id="backToProfile">
-← Back
-</button>
+<div class="container">
 
-<div class="card premium-card">
+<div class="premium-box">
 
-<div class="page-title">
-<h2>Unlock Premium Chat Access</h2>
-<p>Activate your premium membership to access VibeChat chats.</p>
-</div>
+<h1>Unlock Premium Membership</h1>
 
-<div class="price">$5 USD</div>
+<p class="premium-intro">
+
+Upgrade today and enjoy unlimited communication, exclusive features, and priority visibility to help you connect with genuine members faster.
+
+</p>
 
 <ul class="benefits">
-<li>✓ Unlimited messaging</li>
-<li>✓ Unlimited voice and video calls</li>
-<li>✓ Premium member badge</li>
-<li>✓ Free private videos and pictures views</li>
-<li>✓ Priority profile visibility</li>
-<li>✓ Advanced connection matching</li>
-<li>✓ Exclusive premium community access</li>
+
+<li><i class="fa-solid fa-check"></i> Unlimited messaging</li>
+
+<li><i class="fa-solid fa-check"></i> Unlimited voice and video calls</li>
+
+<li><i class="fa-solid fa-check"></i> Premium member badge</li>
+
+<li><i class="fa-solid fa-check"></i> Free private videos and pictures views</li>
+
+<li><i class="fa-solid fa-check"></i> Priority profile visibility</li>
+
+<li><i class="fa-solid fa-check"></i> Advanced connection matching</li>
+
+<li><i class="fa-solid fa-check"></i> Exclusive premium community access</li>
+
 </ul>
 
-<div class="wallet-box">
+<div class="price">
 
-    <strong>Premium Subscription</strong>
-
-    <p style="margin-top:10px;color:var(--muted);">
-        Click the button below to complete your $5 Premium subscription securely through PayPal.
-    </p>
-
-   <button class="subscribe-btn" id="subscribeBtn">
-    ⭐ Make Subscription
-</button>
+$4 USD <span>/ month</span>
 
 </div>
 
-<div class="input-group">
-    <label>Upload Payment Proof</label>
+<button id="paypalBtn">
 
-    <input
-        type="file"
-        id="proofUpload"
-        accept="image/png,image/jpeg,image/jpg"
-        hidden>
+SUBSCRIBE NOW
 
-    <label for="proofUpload" class="upload-btn">
-        📷 Choose Payment Screenshot
-    </label>
-
-    <div id="fileName" class="file-name">
-       
-    </div>
-</div>
-
-<img id="proofPreview" class="preview">
-
-<button class="redirect-btn" id="redirectBtn">
-    🚀 REDIRECT
 </button>
 
-<div id="paymentStatus" style="margin-top:15px;text-align:center;"></div>
+<hr>
+
+<h2>Upload Proof of Payment</h2>
+
+<input
+type="file"
+id="paymentProof"
+accept=".png,.jpg,.jpeg,image/png,image/jpeg">
+
+<div class="previewBox">
+
+<img id="previewImage">
+
+</div>
+
+<button id="submitProof">
+
+Submit Proof
+
+</button>
+
+<div id="paymentStatus"></div>
+
+</div>
 
 </div>
 
 </section>
 
-<!-- CHAT PAGE -->
+<!-- =====================================================
+CHAT PAGE
+===================================================== -->
 
-<section class="chat-page" id="chatPage">
+<section class="page" id="chatPage">
 
-<!-- SIDEBAR -->
+<div class="chat-container">
+
+<!-- LEFT SIDEBAR -->
 
 <div class="sidebar">
 
-<div class="profile-box">
-<h3 id="chatUsername">User</h3>
+<h2>Online Members</h2>
 
-<p style="margin-top:8px;">
-<span class="online-dot"></span>
-Online
-</p>
-
-<p id="chatGoal"
-style="margin-top:10px;color:var(--muted);font-size:14px;">
-</p>
-</div>
-
-<div class="search-box">
-<input
-type="text"
-class="input"
-placeholder="Search chats..."
-id="searchUsers">
-</div>
-
-<div class="chat-list" id="chatList">
-
-<div class="chat-item">
-💎 Premium Lounge
-</div>
-
-<div class="chat-item">
-🌍 Global Chat
-</div>
-
-<div class="chat-item">
-🚀 Networking Hub
-</div>
-
-<div class="chat-item">
-❤️ Dating Room
-</div>
-
-</div>
+<div id="contactList"></div>
 
 </div>
 
@@ -1471,47 +1769,85 @@ id="searchUsers">
 
 <div class="chat-main">
 
-<div
-style="
-padding:20px;
-border-bottom:1px solid rgba(255,255,255,.08);
-display:flex;
-justify-content:space-between;
-align-items:center;
-">
+<!-- TOP -->
+
+<div class="chat-top">
+
+<div class="chat-user">
+
+<div class="avatar">
+
+<i class="fa-solid fa-user"></i>
+
+</div>
 
 <div>
-<h3>Premium Lounge</h3>
-<p style="font-size:13px;color:var(--muted);">
-Members online now
-</p>
+
+<h3 id="chatName">
+
+Emma
+
+</h3>
+
+<small>
+
+🟢 Online
+
+</small>
+
 </div>
 
-<div class="online-dot"></div>
+</div>
+
+<div class="chat-icons">
+
+<i class="fa-solid fa-phone"></i>
+
+<i class="fa-solid fa-video"></i>
+
+<i class="fa-solid fa-gear"></i>
 
 </div>
 
-<div class="messages" id="messages">
+</div>
+
+<!-- MESSAGES -->
+
+<div id="chatMessages">
 
 </div>
 
-<div class="typing" id="typingIndicator">
-</div>
+<!-- INPUT -->
 
 <div class="chat-input">
 
+<button id="emojiBtn">
+
+😊
+
+</button>
+
+<button id="attachBtn">
+
+📎
+
+</button>
+
 <input
+
 type="text"
+
 id="messageInput"
-class="input"
+
 placeholder="Type a message...">
 
-<button
-class="btn"
-id="sendMessageBtn"
-style="width:140px;margin-top:0;">
-Send
+<button id="sendBtn">
+
+<i class="fa-solid fa-paper-plane"></i>
+
 </button>
+
+</div>
 
 </div>
 
@@ -1519,975 +1855,628 @@ Send
 
 </section>
 
+<!-- =====================================================
+FOOTER
+===================================================== -->
+
+<footer>
+
+<div class="container footer-content">
+
+<div>
+
+<h2>LoveConnect</h2>
+
+<p>
+
+Building meaningful friendships and relationships in a secure environment.
+
+</p>
+
+</div>
+
+<div class="footer-links">
+
+<a href="#">Privacy Policy</a>
+
+<a href="#">Terms & Conditions</a>
+
+<a href="#">Contact</a>
+
+</div>
+
+</div>
+
+<p class="copyright">
+
+© 2026 LoveConnect. All Rights Reserved.
+
+</p>
+
+</footer>
+
+<!-- Navigation will go here -->
+
+<!-- Home Page -->
+
+<!-- Signup Page -->
+
+<!-- Premium Page -->
+
+<!-- Chat Page -->
+
+<!-- Footer -->
 
 <script>
 
-/* -------------------------
-   STORAGE KEYS
--------------------------- */
+//==================================
+// FIREBASE CONFIG
+//==================================
 
-const STORAGE = {
-user:'luxelink_user',
-profile:'luxelink_profile',
-payment:'luxelink_payment',
-verification:'luxelink_verification',
-messages:'luxelink_messages'
+const firebaseConfig = {
+
+  apiKey: "AIzaSyCdvaT3MLj2SUHySMFKflqiz9JZTqSvjlo",
+  authDomain: "vibechat-8024f.firebaseapp.com",
+  projectId: "vibechat-8024f",
+  storageBucket: "vibechat-8024f.firebasestorage.app",
+  messagingSenderId: "137768170861",
+  appId: "1:137768170861:web:2f5f3f5e0759e8b5bad664",
+  measurementId: "G-ZS7JRJZ15Y"
+
 };
 
-/* -------------------------
-   LOADER
--------------------------- */
+firebase.initializeApp(firebaseConfig);
 
-window.addEventListener('load',()=>{
+const auth = firebase.auth();
 
-setTimeout(()=>{
-document.getElementById('loader').style.display='none';
-initializeApp();
-},1200);
+//===========================
+// PAGE ROUTER
+//===========================
 
-});
+function showPage(id){
 
-/* -------------------------
-   HELPERS
--------------------------- */
+    if(id==="chatPage" && !premiumApproved){
 
-function showToast(text){
+        toast("Chat is locked until your payment is approved.");
 
-const toast=document.createElement('div');
-toast.className='toast';
-toast.innerText=text;
+        return;
 
-document
-.getElementById('toastContainer')
-.appendChild(toast);
+    }
 
-setTimeout(()=>{
-toast.remove();
-},3000);
+    document.querySelectorAll(".page").forEach(page=>{
 
-}
+        page.classList.remove("active");
 
-function showPage(pageId){
+    });
 
-document
-.querySelectorAll('.page')
-.forEach(p=>p.classList.add('hidden'));
+    const page=document.getElementById(id);
 
-document
-.getElementById('chatPage')
-.style.display='none';
+    if(page){
 
-const page=document.getElementById(pageId);
+        page.classList.add("active");
 
-if(page){
-page.classList.remove('hidden');
-}
+    }
 
-}
+    // Highlight active navigation link
+    document.querySelectorAll("nav a").forEach(link=>{
 
-function saveData(key,data){
-localStorage.setItem(key,JSON.stringify(data));
-}
+        link.classList.remove("active-nav");
 
-function getData(key){
+    });
 
-const item=localStorage.getItem(key);
+    const activeLink = document.querySelector(
+        `nav a[onclick="showPage('${id}')"]`
+    );
 
-if(!item) return null;
+    if(activeLink){
 
-try{
-return JSON.parse(item);
-}catch{
-return null;
-}
+        activeLink.classList.add("active-nav");
 
-}
+    }
 
-/* -------------------------
-   ROUTING LOGIC
--------------------------- */
+    window.scrollTo({
 
-function initializeApp(){
+        top:0,
 
-const user=getData(STORAGE.user);
-const profile=getData(STORAGE.profile);
-const payment=getData(STORAGE.payment);
-const verification=getData(STORAGE.verification);
-
-if(!user){
-showPage('signupPage');
-return;
-}
-
-if(!profile){
-showPage('profilePage');
-return;
-}
-
-if(!payment){
-showPage('premiumPage');
-return;
-}
-
-if(
-verification &&
-verification.status==='approved'
-){
-loadChat();
-return;
-}
-
-showPage('premiumPage');
-
-const statusBox=
-document.getElementById('paymentStatus');
-
-statusBox.innerHTML=
-`
-<div style="color:#ffb703;">
-Payment under review...
-</div>
-`;
-
-}
-
-/* -------------------------
-   SIGNUP
--------------------------- */
-
-document
-.getElementById('signupBtn')
-.addEventListener('click',()=>{
-
-const email=
-document.getElementById('email').value.trim();
-
-const password=
-document.getElementById('password').value;
-
-const confirm=
-document.getElementById('confirmPassword').value;
-
-const terms=
-document.getElementById('terms').checked;
-
-const error=
-document.getElementById('signupError');
-
-error.innerHTML='';
-
-if(!email){
-error.innerHTML=
-'<div class="error">Email is required.</div>';
-return;
-}
-
-if(!password){
-error.innerHTML=
-'<div class="error">Password is required.</div>';
-return;
-}
-
-if(password!==confirm){
-error.innerHTML=
-'<div class="error">Passwords do not match.</div>';
-return;
-}
-
-if(!terms){
-error.innerHTML=
-'<div class="error">Accept terms first.</div>';
-return;
-}
-
-saveData(
-STORAGE.user,
-{
-email,
-password,
-createdAt:Date.now()
-}
-);
-
-showToast('Account created');
-
-showPage('profilePage');
-
-});
-
-/* -------------------------
-   BACK BUTTON
--------------------------- */
-
-document
-.getElementById('backToSignup')
-.addEventListener('click',()=>{
-
-localStorage.removeItem(STORAGE.user);
-
-showPage('signupPage');
-
-});
-
-/* -------------------------
-   PROFILE
--------------------------- */
-
-document
-.getElementById('profileBtn')
-.addEventListener('click',()=>{
-
-const username=
-document.getElementById('username').value.trim();
-
-const age=
-document.getElementById('age').value.trim();
-
-const hobbies=
-document.getElementById('hobbies').value.trim();
-
-const relationship=
-document.getElementById('relationship').value;
-
-const error=
-document.getElementById('profileError');
-
-error.innerHTML='';
-
-if(
-!username||
-!age||
-!hobbies||
-!relationship
-){
-error.innerHTML=
-'<div class="error">Please complete all fields.</div>';
-return;
-}
-if (parseInt(age, 10) < 18) {
-    error.innerHTML =
-    '<div class="error">You must be at least 18 years old to create a VibeChat account.</div>';
-    return;
-}
-
-saveData(
-STORAGE.profile,
-{
-username,
-age,
-hobbies,
-relationship
-}
-);
-
-showToast('Profile saved');
-
-showPage('premiumPage');
-
-});
-
-/* -------------------------
-   BACK TO PROFILE
--------------------------- */
-
-document
-.getElementById('backToProfile')
-.addEventListener('click',()=>{
-
-showPage('profilePage');
-
-});
-/* -------------------------
-   COPY USDT ADDRESS
--------------------------- */
-
-const subscribeBtn = document.getElementById('subscribeBtn');
-
-if (subscribeBtn) {
-
-    subscribeBtn.addEventListener('click', () => {
-
-        window.open(
-            "https://www.paypal.com/ncp/payment/2SP3YD39MC3VL",
-            "_blank"
-        );
+        behavior:"smooth"
 
     });
 
 }
 
-/* -------------------------
-   PAYMENT PROOF PREVIEW
--------------------------- */
+//===========================
+// LOADER
+//===========================
 
-const proofInput =
-document.getElementById('proofUpload');
+window.addEventListener("load",()=>{
 
-if(proofInput){
+setTimeout(()=>{
 
-proofInput.addEventListener('change',(e)=>{
+loader.style.opacity="0";
 
-const file = e.target.files[0];
+setTimeout(()=>{
+
+loader.style.display="none";
+
+},600);
+
+},1200);
+
+});
+
+//===========================
+// TOAST
+//===========================
+
+function toast(message){
+
+const t=document.getElementById("toast");
+
+t.innerHTML=message;
+
+t.style.display="block";
+
+setTimeout(()=>{
+
+t.style.display="none";
+
+},3000);
+
+}
+
+//===========================
+// PARTICLES
+//===========================
+
+const particleContainer=document.getElementById("particles");
+
+for(let i=0;i<60;i++){
+
+const p=document.createElement("div");
+
+p.className="particle";
+
+const size=Math.random()*8+3;
+
+p.style.width=size+"px";
+
+p.style.height=size+"px";
+
+p.style.left=Math.random()*100+"%";
+
+p.style.animationDuration=(10+Math.random()*15)+"s";
+
+p.style.animationDelay=Math.random()*10+"s";
+
+particleContainer.appendChild(p);
+
+}
+
+//===========================
+// RIPPLE EFFECT
+//===========================
+
+document.addEventListener("click",function(e){
+
+if(e.target.matches("button")){
+
+e.target.classList.add("ripple");
+
+const circle=document.createElement("span");
+
+const diameter=Math.max(
+
+e.target.clientWidth,
+
+e.target.clientHeight
+
+);
+
+circle.style.width=diameter+"px";
+
+circle.style.height=diameter+"px";
+
+circle.style.left=(e.offsetX-diameter/2)+"px";
+
+circle.style.top=(e.offsetY-diameter/2)+"px";
+
+e.target.appendChild(circle);
+
+setTimeout(()=>{
+
+circle.remove();
+
+},600);
+
+}
+
+});
+
+//===========================
+// INITIAL PAGE
+//===========================
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+showPage("homePage");
+
+});
+
+//======================================
+// MEMBER REVIEWS
+//======================================
+
+const reviews=[
+
+["James","USA","⭐⭐⭐⭐⭐","Met amazing people here."],
+
+["Oliver","United Kingdom","⭐⭐⭐⭐⭐","Fantastic experience."],
+
+["Liam","Australia","⭐⭐⭐⭐","Very genuine members."],
+
+["Noah","USA","⭐⭐⭐⭐⭐","Highly recommended."],
+
+["William","United Kingdom","⭐⭐⭐⭐⭐","Easy to use."],
+
+["Henry","Australia","⭐⭐⭐⭐","Excellent support."],
+
+["Benjamin","USA","⭐⭐⭐⭐⭐","Found wonderful friends."],
+
+["Lucas","United Kingdom","⭐⭐⭐⭐⭐","Very professional platform."],
+
+["Jack","Australia","⭐⭐⭐⭐⭐","Great community."],
+
+["Alexander","USA","⭐⭐⭐⭐","Love the design."],
+
+["Daniel","United Kingdom","⭐⭐⭐⭐⭐","Amazing messaging system."],
+
+["Ethan","Australia","⭐⭐⭐⭐⭐","Worth joining."],
+
+["Jacob","USA","⭐⭐⭐⭐","Safe and secure."],
+
+["Samuel","United Kingdom","⭐⭐⭐⭐⭐","Friendly members."],
+
+["Logan","Australia","⭐⭐⭐⭐⭐","Premium features are great."],
+
+["Matthew","USA","⭐⭐⭐⭐","Very reliable."],
+
+["Ryan","United Kingdom","⭐⭐⭐⭐⭐","Found meaningful connections."],
+
+["Nathan","Australia","⭐⭐⭐⭐⭐","Easy registration."],
+
+["Michael","USA","⭐⭐⭐⭐⭐","Fast messaging."],
+
+["Joseph","United Kingdom","⭐⭐⭐⭐","Best dating platform."]
+
+];
+
+const reviewContainer=document.getElementById("reviewContainer");
+
+let reviewHTML="";
+
+reviews.forEach(r=>{
+
+reviewHTML+=`
+
+<div class="review-box">
+
+<h3>${r[0]}</h3>
+
+<small>${r[1]}</small>
+
+<div>${r[2]}</div>
+
+<p>${r[3]}</p>
+
+</div>
+
+`;
+
+});
+
+/* Duplicate reviews to make infinite scrolling smooth */
+
+reviewContainer.innerHTML=reviewHTML+reviewHTML;
+
+//==================================
+// ENABLE SIGNUP BUTTON
+//==================================
+
+const agree=document.getElementById("agree");
+
+const signupBtn=document.getElementById("signupBtn");
+
+agree.addEventListener("change",()=>{
+
+signupBtn.disabled=!agree.checked;
+
+});
+
+//==================================
+// PASSWORD TOGGLE
+//==================================
+
+function togglePassword(id,icon){
+
+const input=document.getElementById(id);
+
+if(input.type==="password"){
+
+input.type="text";
+
+icon.classList.replace("fa-eye","fa-eye-slash");
+
+}else{
+
+input.type="password";
+
+icon.classList.replace("fa-eye-slash","fa-eye");
+
+}
+
+}
+
+//==================================
+// SIGNUP
+//==================================
+
+document
+
+.getElementById("signupForm")
+
+.addEventListener("submit",async function(e){
+
+e.preventDefault();
+
+const email=document.getElementById("email").value.trim();
+
+const password=document.getElementById("password").value;
+
+const confirm=document.getElementById("confirmPassword").value;
+
+const age=parseInt(document.getElementById("age").value);
+
+if(age<18){
+
+toast("You must be at least 18 years old.");
+
+return;
+
+}
+
+const emailPattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if(!emailPattern.test(email)){
+
+toast("Invalid email address.");
+
+return;
+
+}
+
+if(password!==confirm){
+
+toast("Passwords do not match.");
+
+return;
+
+}
+
+signupBtn.innerHTML='Creating Account...';
+
+signupBtn.disabled=true;
+
+try{
+
+await auth.createUserWithEmailAndPassword(
+
+email,
+
+password
+
+);
+
+toast("Account created successfully!");
+
+showPage("premiumPage");
+
+}
+
+catch(error){
+
+toast(error.message);
+
+}
+
+signupBtn.innerHTML="Create Account";
+
+signupBtn.disabled=false;
+
+});
+
+//==================================
+// PAYPAL BUTTON
+//==================================
+
+document
+
+.getElementById("paypalBtn")
+
+.addEventListener("click",function(){
+
+window.open(
+
+"https://www.paypal.com/ncp/payment/2SP3YD39MC3VL",
+
+"_blank"
+
+);
+
+});
+
+//==================================
+// IMAGE PREVIEW
+//==================================
+
+const paymentProof=document.getElementById("paymentProof");
+
+const preview=document.getElementById("previewImage");
+
+paymentProof.addEventListener("change",function(){
+
+const file=this.files[0];
 
 if(!file) return;
 
-const reader = new FileReader();
+const reader=new FileReader();
 
-const fileName = document.getElementById('fileName');
+reader.onload=function(e){
 
-if(fileName){
-    fileName.textContent = file.name;
+preview.src=e.target.result;
+
+preview.style.display="block";
+
 }
-
-reader.onload = function(ev){
-
-const preview =
-document.getElementById('proofPreview');
-
-preview.src = ev.target.result;
-preview.style.display='block';
-
-localStorage.setItem(
-'luxelink_proof_image',
-ev.target.result
-);
-
-};
 
 reader.readAsDataURL(file);
 
 });
 
-}
+//==================================
+// SUBMIT PAYMENT
+//==================================
 
-/* restore preview */
+document
 
-const storedProof =
-localStorage.getItem('luxelink_proof_image');
+.getElementById("submitProof")
 
-if(storedProof){
+.addEventListener("click",function(){
 
-const preview =
-document.getElementById('proofPreview');
+if(paymentProof.files.length===0){
 
-preview.src = storedProof;
-preview.style.display='block';
+toast("Please upload your payment proof.");
 
-}
-
-/* -------------------------
-   PAYMENT SUBMIT
--------------------------- */
-
-const redirectBtn =
-document.getElementById('redirectBtn');
-
-if(redirectBtn){
-
-redirectBtn.addEventListener('click',()=>{
-
-const proof =
-localStorage.getItem('luxelink_proof_image');
-
-if(!proof){
-
-showToast('Upload payment proof first');
 return;
 
 }
 
-saveData(
-STORAGE.payment,
-{
-submitted:true,
-proofUploaded:true,
-date:Date.now()
-}
-);
+this.disabled=true;
 
-saveData(
-STORAGE.verification,
-{
-status:'pending'
-}
-);
+this.innerHTML="Submitting...";
 
-document.getElementById(
-'paymentStatus'
-).innerHTML =
-`
-<div style="color:#ffb703;">
-Waiting for admin verification...
-</div>
+setTimeout(()=>{
+
+this.innerHTML="Submitted";
+
+document.getElementById("paymentStatus").innerHTML=`
+
+<b style="color:#43ff8d;">
+
+Payment proof submitted successfully.
+
+</b>
+
+<br><br>
+
+Status:
+
+<b style="color:orange;">
+
+UNDER REVIEW
+
+</b>
+
+<br>
+
+Estimated approval time:
+
+<b>
+
+Up to 10 minutes
+
+</b>
+
+<br><br>
+
+Chat access will remain locked until approved.
+
 `;
 
-showToast(
-'Please complete payment. Waiting for admin verification.'
-);
+toast("Payment proof submitted.");
+
+},2500);
 
 });
 
-}
+//==================================
+// APPROVAL FUNCTION
+//==================================
 
-/* -------------------------
-   ADMIN VERIFICATION
--------------------------- */
+let premiumApproved=false;
 
-const saveVerificationBtn =
-document.getElementById('saveVerificationBtn');
+function approveUser(){
 
-if(saveVerificationBtn){
+premiumApproved=true;
 
-saveVerificationBtn.addEventListener('click',()=>{
+toast("Premium approved!");
 
-const status =
-document.getElementById(
-'verificationSelect'
-).value;
-
-saveData(
-STORAGE.verification,
-{
-status
-}
-);
-
-showToast(
-'Verification updated'
-);
-
-if(status==='approved'){
-
-showToast(
-'User approved successfully'
-);
-
-setTimeout(()=>{
-loadChat();
-},800);
+showPage("chatPage");
 
 }
 
-});
+//====================================
+// CONTACTS
+//====================================
 
-}
+const females=[
 
-/* restore admin status */
+"Emma",
 
-const existingVerification =
-getData(STORAGE.verification);
+"Charlotte",
 
-if(existingVerification){
+"Sophia",
 
-document.getElementById(
-'verificationSelect'
-).value =
-existingVerification.status;
+"Emily",
 
-}
+"Olivia",
 
-/* -------------------------
-   CHAT SYSTEM
--------------------------- */
+"Grace",
 
-function loadChat(){
+"Amelia",
 
-document
-.querySelectorAll('.page')
-.forEach(p=>p.classList.add('hidden'));
+"Harper",
 
-document.getElementById(
-'chatPage'
-).style.display='flex';
+"Mia",
 
-const profile =
-getData(STORAGE.profile);
-
-if(profile){
-
-document.getElementById(
-'chatUsername'
-).innerText =
-profile.username;
-
-document.getElementById(
-'chatGoal'
-).innerText =
-profile.relationship;
-
-}
-
-loadMessages();
-
-}
-
-/* -------------------------
-   MESSAGE STORAGE
--------------------------- */
-
-function loadMessages(){
-
-const container =
-document.getElementById('messages');
-
-container.innerHTML='';
-
-const messages =
-getData(STORAGE.messages) || [];
-
-messages.forEach(msg=>{
-
-appendMessage(
-msg.text,
-msg.type,
-msg.time,
-false
-);
-
-});
-
-scrollMessages();
-
-}
-
-function saveMessage(
-text,
-type,
-time
-){
-
-const messages =
-getData(STORAGE.messages) || [];
-
-messages.push({
-text,
-type,
-time
-});
-
-saveData(
-STORAGE.messages,
-messages
-);
-
-}
-
-function appendMessage(
-text,
-type,
-time,
-save=true
-){
-
-const container =
-document.getElementById('messages');
-
-const div =
-document.createElement('div');
-
-div.className =
-`message ${type}`;
-
-div.innerHTML =
-`
-${text}
-<span class="time">
-${time}
-</span>
-`;
-
-container.appendChild(div);
-
-if(save){
-
-saveMessage(
-text,
-type,
-time
-);
-
-}
-
-scrollMessages();
-
-}
-
-function scrollMessages(){
-
-const container =
-document.getElementById('messages');
-
-container.scrollTop =
-container.scrollHeight;
-
-}
-
-/* -------------------------
-   TIME FORMAT
--------------------------- */
-
-function currentTime(){
-
-const now =
-new Date();
-
-return now.toLocaleTimeString(
-[],
-{
-hour:'2-digit',
-minute:'2-digit'
-}
-);
-
-}
-
-/* -------------------------
-   SEND MESSAGE
--------------------------- */
-
-const sendBtn =
-document.getElementById(
-'sendMessageBtn'
-);
-
-if(sendBtn){
-
-sendBtn.addEventListener(
-'click',
-sendMessage
-);
-
-}
-
-const messageInput =
-document.getElementById(
-'messageInput'
-);
-
-if(messageInput){
-
-messageInput.addEventListener(
-'keypress',
-(e)=>{
-
-if(e.key==='Enter'){
-sendMessage();
-}
-
-});
-
-}
-
-/* -------------------------
-   SEND LOGIC
--------------------------- */
-
-function sendMessage(){
-
-const input =
-document.getElementById(
-'messageInput'
-);
-
-const text =
-input.value.trim();
-
-if(!text) return;
-
-appendMessage(
-text,
-'sent',
-currentTime()
-);
-
-input.value='';
-
-simulateReply();
-
-}
-
-/* -------------------------
-   TYPING INDICATOR
--------------------------- */
-
-function simulateReply(){
-
-const typing =
-document.getElementById(
-'typingIndicator'
-);
-
-typing.innerText =
-'Typing...';
-
-setTimeout(()=>{
-
-typing.innerText='';
-
-const replies = [
-
-'Welcome to LuxeLink.',
-'Great to connect with you.',
-'Thanks for your message.',
-'Premium members are online.',
-'How is your day going?',
-'Nice meeting you.',
-'Tell me more about yourself.',
-'Interesting hobbies!',
-'Looking forward to chatting.',
-'That sounds amazing.'
+"Ava"
 
 ];
 
-const randomReply =
-replies[
-Math.floor(
-Math.random()*replies.length
-)
-];
+const contactList=document.getElementById("contactList");
 
-appendMessage(
-randomReply,
-'received',
-currentTime()
-);
+females.forEach(name=>{
 
-},1800);
+contactList.innerHTML+=`
 
-}
+<div class="contact">
 
-/* -------------------------
-   SEARCH CHAT LIST
--------------------------- */
+<div class="contact-avatar">
 
-const searchInput =
-document.getElementById(
-'searchUsers'
-);
-
-if(searchInput){
-
-searchInput.addEventListener(
-'input',
-()=>{
-
-const value =
-searchInput.value.toLowerCase();
-
-document
-.querySelectorAll('.chat-item')
-.forEach(item=>{
-
-const text =
-item.innerText.toLowerCase();
-
-item.style.display =
-text.includes(value)
-? 'block'
-: 'none';
-
-});
-
-});
-
-}
-
-/* -------------------------
-   RIPPLE EFFECT
--------------------------- */
-
-document
-.querySelectorAll('.btn')
-.forEach(btn=>{
-
-btn.addEventListener(
-'click',
-function(e){
-
-const ripple =
-document.createElement('span');
-
-const rect =
-this.getBoundingClientRect();
-
-const size =
-Math.max(
-rect.width,
-rect.height
-);
-
-ripple.style.width =
-size+'px';
-
-ripple.style.height =
-size+'px';
-
-ripple.style.position =
-'absolute';
-
-ripple.style.borderRadius =
-'50%';
-
-ripple.style.background =
-'rgba(255,255,255,.4)';
-
-ripple.style.left =
-(e.clientX-rect.left-size/2)
-+'px';
-
-ripple.style.top =
-(e.clientY-rect.top-size/2)
-+'px';
-
-ripple.style.pointerEvents =
-'none';
-
-ripple.style.transform =
-'scale(0)';
-
-ripple.style.transition =
-'.6s';
-
-this.appendChild(ripple);
-
-requestAnimationFrame(()=>{
-ripple.style.transform =
-'scale(4)';
-ripple.style.opacity='0';
-});
-
-setTimeout(()=>{
-ripple.remove();
-},600);
-
-});
-
-});
-
-/* -------------------------
-   SECURITY CHECK
--------------------------- */
-
-setInterval(()=>{
-
-const user =
-getData(STORAGE.user);
-
-const profile =
-getData(STORAGE.profile);
-
-const payment =
-getData(STORAGE.payment);
-
-const verification =
-getData(STORAGE.verification);
-
-const chatVisible =
-document.getElementById(
-'chatPage'
-).style.display === 'flex';
-
-if(chatVisible){
-
-if(
-!user ||
-!profile ||
-!payment ||
-!verification ||
-verification.status!=='approved'
-){
-
-location.reload();
-
-}
-
-}
-
-},3000);
-
-/* -------------------------
-   AUTO RESUME STATE
--------------------------- */
-const reviews=[
-
-["Michael","USA","Met amazing people within days."],
-["James","UK","Very professional experience."],
-["David","USA","The premium membership is worth it."],
-["Daniel","UK","Easy to use and beautifully designed."],
-["Matthew","USA","I've already made genuine friends."],
-["Andrew","UK","Fantastic community."],
-["Christopher","USA","Everything feels premium."],
-["Ryan","USA","Highly recommended."],
-["Joshua","UK","Smooth registration."],
-["Thomas","UK","Best platform I've joined."],
-["Joseph","USA","Love chatting here."],
-["Benjamin","UK","Excellent service."],
-["Anthony","USA","Beautiful interface."],
-["Charles","UK","Five stars."],
-["Kevin","USA","Very genuine members."],
-["Richard","UK","Looks trustworthy."],
-["Steven","USA","Easy Premium upgrade."],
-["Brian","USA","Amazing experience."],
-["Jonathan","UK","Found real conversations."],
-["Scott","USA","Definitely recommend."]
-
-];
-
-const track=document.getElementById("reviewsTrack");
-
-let html="";
-
-reviews.forEach(r=>{
-
-const initials=r[0].charAt(0);
-
-html+=`
-
-<div class="review-card">
-
-<div class="review-header">
-
-<div class="avatar">
-
-${initials}
+${name[0]}
 
 </div>
 
 <div>
 
-<div class="review-name">
+<b>${name}</b>
 
-${r[0]}
+<br>
 
-</div>
-
-<div class="review-country">
-
-${r[1]}
+<small>Last seen recently</small>
 
 </div>
 
-</div>
-
-</div>
-
-<div class="review-stars">
-
-★★★★★
-
-</div>
-
-<div class="review-text">
-
-"${r[2]}"
-
-</div>
-
-<div class="review-badge">
-
-✔ Verified Premium
-
-</div>
+<div class="online"></div>
 
 </div>
 
@@ -2495,16 +2484,163 @@ ${r[1]}
 
 });
 
-/* duplicate for seamless scrolling */
+//====================================
+// SEND MESSAGE
+//====================================
 
-track.innerHTML=html+html;
-initializeApp();
+const input=document.getElementById("messageInput");
 
-/* ==========================================================
-   END OF PART 3
-========================================================== */
+const sendBtn=document.getElementById("sendBtn");
 
+const chat=document.getElementById("chatMessages");
 
+const replies=[
+
+"Hi 😊",
+
+"Nice meeting you.",
+
+"How are you today?",
+
+"I'm from London.",
+
+"What are your hobbies?",
+
+"Tell me more.",
+
+"I enjoy travelling.",
+
+"That's interesting!",
+
+"😊",
+
+"I'd love to know you better."
+
+];
+
+function currentTime(){
+
+return new Date().toLocaleTimeString([],{
+
+hour:'2-digit',
+
+minute:'2-digit'
+
+});
+
+}
+
+function addMessage(text,type){
+
+const div=document.createElement("div");
+
+div.className="message "+type;
+
+div.innerHTML=`
+
+${text}
+
+<span class="time">
+
+${currentTime()}
+
+</span>
+
+`;
+
+chat.appendChild(div);
+
+chat.scrollTop=chat.scrollHeight;
+
+}
+
+function typing(){
+
+const t=document.createElement("div");
+
+t.className="typing";
+
+t.id="typing";
+
+t.innerHTML="Typing...";
+
+chat.appendChild(t);
+
+chat.scrollTop=chat.scrollHeight;
+
+}
+
+function removeTyping(){
+
+const t=document.getElementById("typing");
+
+if(t)t.remove();
+
+}
+
+function autoReply(){
+
+typing();
+
+setTimeout(()=>{
+
+removeTyping();
+
+const random=
+
+replies[Math.floor(Math.random()*replies.length)];
+
+addMessage(random,"received");
+
+},1000+Math.random()*3000);
+
+}
+
+function send(){
+
+const msg=input.value.trim();
+
+if(msg==="")return;
+
+addMessage(msg,"sent");
+
+input.value="";
+
+autoReply();
+
+}
+
+sendBtn.onclick=send;
+
+input.addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+
+send();
+
+}
+
+});
+
+window.addEventListener("load",()=>{
+
+setTimeout(()=>{
+
+if(document.getElementById("chatMessages")){
+
+addMessage(
+
+"Hello 😊 Welcome to LoveConnect! I'm Emma. It's nice to meet you.",
+
+"received"
+
+);
+
+}
+
+},1200);
+
+});
 </script>
 
 </body>
